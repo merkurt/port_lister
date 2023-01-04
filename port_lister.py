@@ -2,11 +2,16 @@ import sys
 import glob
 import serial
 
+EXCEPTION_LIST = []
 
 def serial_ports():
     
     if sys.platform.startswith('win'):
         ports = ['COM%s' % (i + 1) for i in range(256)]
+        # these lines are excepted ports like Bluetooth connection ports on Windows pc
+        if len(EXCEPTION_LIST):
+            for exc in EXCEPTION_LIST:
+                ports.remove(exc)
     elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
         # this excludes your current terminal "/dev/tty"
         ports = glob.glob('/dev/tty[A-Za-z]*')
